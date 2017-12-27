@@ -1,0 +1,25 @@
+CREATE DATABASE tutorial;
+USE tutorial;
+
+CREATE TABLE persona(
+	id int PRIMARY KEY,
+	nombre varchar(30),
+    apellido varchar(30),
+    edad int
+    
+);
+
+
+https://www.youtube.com/watch?v=1yju9IVCFa8
+
+Jsp
+DAO vo
+https://www.youtube.com/watch?v=Sxm3b9_f9RU
+
+carrrito
+https://www.youtube.com/watch?v=N12cAtRcdiU&index=2&list=PLnWAzeXp9V4ltCDswdwdlOVTHtTjxRIEr
+
+
+
+
+
