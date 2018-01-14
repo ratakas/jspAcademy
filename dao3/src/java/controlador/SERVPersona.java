@@ -12,6 +12,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.*;
+import javax.servlet.RequestDispatcher;
+import modelo.DAOPersona;
+import uml.Persona;
 
 /**
  *
@@ -33,16 +37,52 @@ public class SERVPersona extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         PrintWriter out = response.getWriter();
         try {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet SERVPersona</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet SERVPersona at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+            DAOPersona dao= new DAOPersona();
+            Persona p= new Persona();
+            List<Persona> datos = new ArrayList();
+            String Respuesta="";
+            RequestDispatcher rd= null;
+            
+            String campo,criterio;
+            
+            try {
+                if (request.getParameter("btnInsertar")!=null) {
+                    p.setId(Integer.parseInt(request.getParameter("txtId")));
+                    p.setNombre(request.getParameter("txtNombre"));
+                    p.setApellido(request.getParameter("txtApellido"));
+                    p.setEdad(Integer.parseInt(request.getParameter("txtEdad")));
+                    Respuesta=dao.crear(p);
+                    request.setAttribute("Respuesta", Respuesta);
+                    rd = request.getRequestDispatcher("vistaPersona.jsp");    
+                }else if (request.getParameter("btnModificar")!=null) {
+                    p.setId(Integer.parseInt(request.getParameter("txtId")));
+                    p.setNombre(request.getParameter("txtNombre"));
+                    p.setApellido(request.getParameter("txtApellido"));
+                    p.setEdad(Integer.parseInt(request.getParameter("txtEdad")));
+                    Respuesta=dao.editar(p);
+                    request.setAttribute("Respuesta", Respuesta);
+                    rd = request.getRequestDispatcher("vistaPersona.jsp"); 
+                    
+                }else if (request.getParameter("btnEliminar")!=null) {
+                    p.setId(Integer.parseInt(request.getParameter("txtId")));
+                    Respuesta=dao.eliminar(p);
+                    request.setAttribute("Respuesta", Respuesta);
+                    rd = request.getRequestDispatcher("vistaPersona.jsp");    
+                }else if (request.getParameter("btnBuscar")!=null) {
+                    campo=request.getParameter("txtCampo");
+                    criterio=request.getParameter("txtCriterio");
+                    
+                    datos= dao.filtrar(campo, criterio);
+                    request.setAttribute("filtro", datos);
+                    rd = request.getRequestDispatcher("vistaPersona.jsp");
+
+                }
+            
+            } catch (Exception e) {
+            }
+            
+            rd.forward(request, response);
+            
         } finally {
             out.close();
         }

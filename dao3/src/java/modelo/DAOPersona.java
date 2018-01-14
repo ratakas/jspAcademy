@@ -83,7 +83,7 @@ public class DAOPersona implements Operaciones{
          Persona p= (Persona) obj;
         Connection conn;
         PreparedStatement pst;
-        String sql="pdate persona set nombre=?, apellido=?, edad=? where id=?";
+        String sql="update persona set nombre=?, apellido=?, edad=? where id=?";
         String respuesta="";
         try {
             Class.forName(db.getDriver());
@@ -143,8 +143,33 @@ public class DAOPersona implements Operaciones{
     }
 
     @Override
-    public List<?> filtrar(String campo, String Criterio) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Persona> filtrar(String campo, String Criterio) {
+    List<Persona> datos = new ArrayList();
+        Connection conn;
+        PreparedStatement pst;
+        ResultSet rs;
+        String sql= "select * from persona where "+campo+" like '%"+Criterio+"%'";
+        try {
+            Class.forName(db.getDriver());
+            conn=DriverManager.getConnection(
+            db.getUrl(),db.getUsuario(),db.getPassword()
+            );
+            pst = conn.prepareStatement(sql);
+            rs=pst.executeQuery();
+            while(rs.next()){
+                datos.add(new Persona(rs.getInt("id"),
+                    rs.getString("nombre"),
+                    rs.getString("apellido"),
+                    rs.getInt("edad")
+                    ));
+
+            }
+            conn.close();
+            
+        } catch (ClassNotFoundException e) {
+        } catch (SQLException e) {
+        }
+        return datos;    
     }
     
 }
